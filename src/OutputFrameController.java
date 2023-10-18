@@ -52,6 +52,7 @@ public class OutputFrameController {
     private boolean isBotFirst;
     private BotMinMax botMinMax;
     private BotLocalSearch botLocalSearch;
+    private BotGenetic botGenetic;
 
 
     private static final int ROW = 8;
@@ -77,16 +78,35 @@ public class OutputFrameController {
         this.roundsLeft = Integer.parseInt(rounds);
         this.isBotFirst = isBotFirst;
 
-        // Start bot
+        // Init Bot MinMax
         this.botMinMax = new BotMinMax(8,8, buttons, "X");
+        // Init Bot Local Search
         this.botLocalSearch = new BotLocalSearch();
+        // Init Bot Genetic
+        this.botGenetic = new BotGenetic(buttons);
+
         this.playerXTurn = !isBotFirst;
+        // MinMax (Player 1) vs Local Search (Player 2)
         if (this.isBotFirst) {
             this.moveBotMinMax();
         }
         else{
             this.moveBotLocalSearch();
         }
+        // MinMax (Player 1) vs Genetic (Player 2)
+//        if (this.isBotFirst) {
+//            this.moveBotMinMax();
+//        }
+//        else{
+//            this.moveBotGenetic();
+//        }
+        // LocalSearch (Player 1) vs Genetic (Player 2)
+//        if (this.isBotFirst) {
+//            this.moveBotLocalSearch();
+//        }
+//        else{
+//            this.moveBotGenetic();
+//        }
     }
 
 
@@ -206,8 +226,10 @@ public class OutputFrameController {
                     this.endOfGame();
                 }
 
-                // First Bot's turn
+                // Bot Local Search (P2)
                 this.moveBotLocalSearch();
+                // Bot Genetic (P2)
+                // this.moveBotGenetic();
             }
             else {
                 this.playerXBoxPane.setStyle("-fx-background-color: #90EE90; -fx-border-color: #D3D3D3;");
@@ -227,8 +249,10 @@ public class OutputFrameController {
                     this.endOfGame();       // Determine & announce the winner.
                 }
 
-                // Second Bot's turn
+                // Bot Min Max (P1)
                 this.moveBotMinMax();
+                // Bot Local Search (P1)
+                // this.moveBotLocalSearch();
             }
         }
     }
@@ -381,6 +405,20 @@ public class OutputFrameController {
 
     private void moveBotLocalSearch() {
         int[] botMove = this.botLocalSearch.move(this.buttons, this.roundsLeft, this.playerOScore, this.playerXScore, this.playerXTurn);
+        int i = botMove[0];
+        int j = botMove[1];
+
+        if (!this.buttons[i][j].getText().equals("")) {
+            new Alert(Alert.AlertType.ERROR, "Bot Invalid Coordinates. Exiting.").showAndWait();
+            System.exit(1);
+            return;
+        }
+
+        this.selectedCoordinates(i, j);
+    }
+
+    private void moveBotGenetic() {
+        int[] botMove = this.botGenetic.move(this.buttons, this.roundsLeft, this.playerOScore, this.playerXScore, this.playerXTurn);
         int i = botMove[0];
         int j = botMove[1];
 
