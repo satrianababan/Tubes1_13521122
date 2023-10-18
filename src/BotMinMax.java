@@ -17,8 +17,6 @@ public class BotMinMax extends Bot{
     private String bot;
     private String opponent;
 
-    private int botScore;
-    private int[] bestMove;
     public BotMinMax(int row, int col, Button[][] buttons, String bot) {
         this.ROW = row;
         this.COL = col;
@@ -26,12 +24,6 @@ public class BotMinMax extends Bot{
         this.bot = bot;
         this.opponent = bot.equals("O") ? "X" : "O";
     }
-
-    public void updateScore(int botScore){
-
-        this.botScore = botScore;
-    }
-
 
     public int[] move(Button[][] buttons, int roundsLeft, int playerOScore, int playerXScore, boolean playerXTurn) {
         this.node = new Node();
@@ -71,7 +63,7 @@ public class BotMinMax extends Bot{
         }
 
         if(maxPlayer) {
-            addHeuristicMove(this.bot, node);
+            addBestMove(this.bot, node);
 
             if(node.getChildren().isEmpty()) {
                 node.setTerminalValue(this.bot);
@@ -88,7 +80,7 @@ public class BotMinMax extends Bot{
         }
 
         else {
-            addHeuristicMove(this.opponent, node);
+            addBestMove(this.opponent, node);
 
             if(node.getChildren().isEmpty()) {
                 node.setTerminalValue(this.bot);
@@ -105,11 +97,6 @@ public class BotMinMax extends Bot{
         }
     }
 
-
-
-
-
-
     private void initializeBoard() {
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COL; j++) {
@@ -120,8 +107,7 @@ public class BotMinMax extends Bot{
         }
     }
 
-    private void addHeuristicMove(String botMarker, Node node) {
-        String opponentMarker = botMarker.equals("O") ? "X" : "O";
+    private void addBestMove(String botMarker, Node node) {
         int[] move = randomMove(node);
 
         for (int i = 0; i < ROW; i++) {
