@@ -87,12 +87,12 @@ public class OutputFrameController {
 
         this.playerXTurn = !isBotFirst;
         // MinMax (Player 1) vs Local Search (Player 2)
-        if (this.isBotFirst) {
-            this.moveBotMinMax();
-        }
-        else{
-            this.moveBotLocalSearch();
-        }
+//        if (this.isBotFirst) {
+//            this.moveBotMinMax();
+//        }
+//        else{
+//            this.moveBotLocalSearch();
+//        }
         // MinMax (Player 1) vs Genetic (Player 2)
 //        if (this.isBotFirst) {
 //            this.moveBotMinMax();
@@ -101,12 +101,12 @@ public class OutputFrameController {
 //            this.moveBotGenetic();
 //        }
         // LocalSearch (Player 1) vs Genetic (Player 2)
-//        if (this.isBotFirst) {
-//            this.moveBotLocalSearch();
-//        }
-//        else{
-//            this.moveBotGenetic();
-//        }
+        if (this.isBotFirst) {
+            this.moveBotLocalSearch();
+        }
+        else{
+            this.moveBotGenetic();
+        }
     }
 
 
@@ -226,10 +226,12 @@ public class OutputFrameController {
                     this.endOfGame();
                 }
 
+                // Bot MinMax (P2)
+                //  this.moveBotMinMax();
                 // Bot Local Search (P2)
-                this.moveBotLocalSearch();
+                //  this.moveBotLocalSearch();
                 // Bot Genetic (P2)
-                // this.moveBotGenetic();
+                 this.moveBotGenetic();
             }
             else {
                 this.playerXBoxPane.setStyle("-fx-background-color: #90EE90; -fx-border-color: #D3D3D3;");
@@ -249,10 +251,12 @@ public class OutputFrameController {
                     this.endOfGame();       // Determine & announce the winner.
                 }
 
-                // Bot Min Max (P1)
-                this.moveBotMinMax();
+                // Bot MinMax (P1)
+                // this.moveBotMinMax();
                 // Bot Local Search (P1)
-                // this.moveBotLocalSearch();
+                 this.moveBotLocalSearch();
+                // Bot Genetic (P1)
+                // this.moveBotGenetic();
             }
         }
     }
