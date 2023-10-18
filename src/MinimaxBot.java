@@ -4,7 +4,7 @@ import java.util.Random;
 
 import javafx.scene.control.Button;
 
-public class MinimaxBot {
+public class MinimaxBot{
     private static final int INFINITY = 9999;
 
     private Node node;
@@ -37,7 +37,7 @@ public class MinimaxBot {
         this.node = new Node();
         initializeBoard();
 
-        int depth = 10;
+        int depth = 4;
         long startTime = System.currentTimeMillis();
         long timeout = 5000;
 
@@ -122,48 +122,19 @@ public class MinimaxBot {
 
     private void addHeuristicMove(String botMarker, Node node) {
         String opponentMarker = botMarker.equals("O") ? "X" : "O";
-        List<int[]> bestMoves = new ArrayList<>();
-        int maxAdjacentOpponents = -1; // Initialize to a value representing "no adjacent opponents."
+        int[] move = randomMove(node);
 
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COL; j++) {
                 if (node.getNodeBoard()[i][j].equals("")) {
-                    int adjacentOpponents = countAdjacentOpponentMarkers(node.getNodeBoard(), i, j, opponentMarker);
-                    if (adjacentOpponents > maxAdjacentOpponents) {
-                        maxAdjacentOpponents = adjacentOpponents;
-                        bestMoves.clear();
-                        bestMoves.add(new int[]{i, j});
-                    } else if (adjacentOpponents == maxAdjacentOpponents) {
-                        bestMoves.add(new int[]{i, j});
-                    }
+                    move = new int[]{i, j};
+                    Node child = new Node(node);
+                    child.writeNodeBoard(move[0], move[1], this.bot);
+                    child.setMove(move[0], move[1]);
+                    node.addChild(child);
                 }
             }
         }
-
-        for (int[] move : bestMoves) {
-            Node child = new Node(node);
-            child.writeNodeBoard(move[0], move[1], this.bot);
-            child.setMove(move[0], move[1]);
-            node.addChild(child);
-        }
-    }
-
-
-    private int countAdjacentOpponentMarkers(String[][] board, int row, int col, String opponentMarker) {
-        int count = 0;
-        if (row > 0 && board[row - 1][col].equals(opponentMarker)) {
-            count++;
-        }
-        if (row < ROW - 1 && board[row + 1][col].equals(opponentMarker)) {
-            count++;
-        }
-        if (col > 0 && board[row][col - 1].equals(opponentMarker)) {
-            count++;
-        }
-        if (col < COL - 1 && board[row][col + 1].equals(opponentMarker)) {
-            count++;
-        }
-        return count;
     }
     public int[] randomMove(Node node) {
         List<int[]> validMove = new ArrayList<>();
