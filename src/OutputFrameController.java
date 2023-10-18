@@ -50,7 +50,8 @@ public class OutputFrameController {
     private int playerOScore;
     private int roundsLeft;
     private boolean isBotFirst;
-    private MinimaxBot bot;
+    private BotMinMax botMinMax;
+    private BotLocalSearch botLocalSearch;
 
 
     private static final int ROW = 8;
@@ -77,10 +78,14 @@ public class OutputFrameController {
         this.isBotFirst = isBotFirst;
 
         // Start bot
-        this.bot = new MinimaxBot(8,8, buttons, "O");
+        this.botMinMax = new BotMinMax(8,8, buttons, "X");
+        this.botLocalSearch = new BotLocalSearch();
         this.playerXTurn = !isBotFirst;
         if (this.isBotFirst) {
-            this.moveBot();
+            this.moveBotMinMax();
+        }
+        else{
+            this.moveBotLocalSearch();
         }
     }
 
@@ -201,8 +206,8 @@ public class OutputFrameController {
                     this.endOfGame();
                 }
 
-                // Bot's turn
-                this.moveBot();
+                // First Bot's turn
+                this.moveBotLocalSearch();
             }
             else {
                 this.playerXBoxPane.setStyle("-fx-background-color: #90EE90; -fx-border-color: #D3D3D3;");
@@ -221,6 +226,9 @@ public class OutputFrameController {
                 if (!isBotFirst && this.roundsLeft == 0) { // Game has terminated.
                     this.endOfGame();       // Determine & announce the winner.
                 }
+
+                // Second Bot's turn
+                this.moveBotMinMax();
             }
         }
     }
@@ -357,9 +365,22 @@ public class OutputFrameController {
         primaryStage.show();
     }
 
-    private void moveBot() {
-        // int[] botMove = this.bot.move(this.buttons, this.roundsLeft, this.playerOScore, this.playerXScore, this.playerXTurn);
-        int[] botMove = this.bot.move(roundsLeft);
+    private void moveBotMinMax() {
+        int[] botMove = this.botMinMax.move(this.buttons, this.roundsLeft, this.playerOScore, this.playerXScore, this.playerXTurn);
+        int i = botMove[0];
+        int j = botMove[1];
+
+        if (!this.buttons[i][j].getText().equals("")) {
+            new Alert(Alert.AlertType.ERROR, "Bot Invalid Coordinates. Exiting.").showAndWait();
+            System.exit(1);
+            return;
+        }
+
+        this.selectedCoordinates(i, j);
+    }
+
+    private void moveBotLocalSearch() {
+        int[] botMove = this.botLocalSearch.move(this.buttons, this.roundsLeft, this.playerOScore, this.playerXScore, this.playerXTurn);
         int i = botMove[0];
         int j = botMove[1];
 
