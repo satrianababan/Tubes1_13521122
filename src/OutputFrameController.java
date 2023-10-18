@@ -50,7 +50,7 @@ public class OutputFrameController {
     private int playerOScore;
     private int roundsLeft;
     private boolean isBotFirst;
-    private Bot bot;
+    private MinimaxBot bot;
 
 
     private static final int ROW = 8;
@@ -77,7 +77,7 @@ public class OutputFrameController {
         this.isBotFirst = isBotFirst;
 
         // Start bot
-        this.bot = new Bot();
+        this.bot = new MinimaxBot(8,8, buttons, "O");
         this.playerXTurn = !isBotFirst;
         if (this.isBotFirst) {
             this.moveBot();
@@ -161,7 +161,9 @@ public class OutputFrameController {
         this.playerOScore = 4;
     }
 
-
+    private boolean isGameOver() {
+        return this.roundsLeft == 0; // Check if the game has ended based on the rounds left.
+    }
 
     /**
      * Process the coordinates of the button that the user selected on the game board.
@@ -172,6 +174,9 @@ public class OutputFrameController {
      */
     private void selectedCoordinates(int i, int j){
         // Invalid when a button with an X or an O is clicked.
+        if (this.isGameOver()) {
+            return; // Game is already over, don't process any more moves.
+        }
         if (!this.buttons[i][j].getText().equals(""))
             new Alert(Alert.AlertType.ERROR, "Invalid coordinates: Try again!").showAndWait();
         // Button must be blank.
@@ -353,7 +358,8 @@ public class OutputFrameController {
     }
 
     private void moveBot() {
-        int[] botMove = this.bot.move(this.buttons, this.roundsLeft, this.playerOScore, this.playerXScore, this.playerXTurn);
+        // int[] botMove = this.bot.move(this.buttons, this.roundsLeft, this.playerOScore, this.playerXScore, this.playerXTurn);
+        int[] botMove = this.bot.move(roundsLeft);
         int i = botMove[0];
         int j = botMove[1];
 
